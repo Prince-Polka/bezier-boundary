@@ -1,0 +1,93 @@
+To find wheter Point is to the left or right of bezier(x0,y0,x1,y1,x2,y2,x3,y3)
+
+Find the (upto 3) solutions for T where bezierPoint(y0,y1,y2,y3,T) == Point.y
+
+Count how many times bezierPoint(x0,x1,x2,x3, solutions for T) < Point.x
+
+If that number is 0 or 2, the  point is on right side, else left
+
+A = y0, B = y1, C = y2, D = y3, yE = the Point.y  
+
+changing y to X should work the same
+
+Plaintext:
+
+solve E = A (1 - T)^3 + 3 B (1 - T)^2 T + 3 C (1 - T) T^2 + D T^3 for T
+
+Input interpretation:
+
+solve E = A (1 - T)^3 + 3 B (1 - T)^2 T + 3 C (1 - T) T^2 + D T^3 for T
+
+Here are theunedited plaintext solutions
+
+Solution # 1
+
+T = (sqrt((27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^2 + 4 (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2)^3) + 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^(1/3)/(3 2^(1/3) (A - 3 B + 3 C - D)) - (2^(1/3) (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2))/(3 (A - 3 B + 3 C - D) (sqrt((27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^2 + 4 (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2)^3) + 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^(1/3)) + (A - 2 B + C)/(A - 3 B + 3 C - D) and A - 3 B + 3 C - D!=0
+
+Solution # 2
+
+T = -((1 - i sqrt(3)) (sqrt((27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^2 + 4 (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2)^3) + 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^(1/3))/(6 2^(1/3) (A - 3 B + 3 C - D)) + ((1 + i sqrt(3)) (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2))/(3 2^(2/3) (A - 3 B + 3 C - D) (sqrt((27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^2 + 4 (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2)^3) + 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^(1/3)) + (A - 2 B + C)/(A - 3 B + 3 C - D) and A - 3 B + 3 C - D!=0
+
+Solution # 3
+
+T = -((1 + i sqrt(3)) (sqrt((27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^2 + 4 (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2)^3) + 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^(1/3))/(6 2^(1/3) (A - 3 B + 3 C - D)) + ((1 - i sqrt(3)) (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2))/(3 2^(2/3) (A - 3 B + 3 C - D) (sqrt((27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^2 + 4 (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2)^3) + 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^(1/3)) + (A - 2 B + C)/(A - 3 B + 3 C - D) and A - 3 B + 3 C - D!=0
+
+SIMPLIFICATION STEP 1
+
+F = 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E
+G = 9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2
+H = A - 3 B + 3 C - D
+
+Solution # 1
+
+T = (sqrt((F)^2 + 4 (G)^3) + F)^(1/3)/(3 2^(1/3) (H)) - (2^(1/3) (G))/(3 (H) (sqrt((F)^2 + 4 (G)^3) + F)^(1/3)) + (A - 2 B + C)/(H) and H!=0
+
+Solution # 2
+
+T = -((1 - i sqrt(3)) (sqrt((F)^2 + 4 (G)^3) + F)^(1/3))/(6 2^(1/3) (H)) + ((1 + i sqrt(3)) (G))/(3 2^(2/3) (H) (sqrt((F)^2 + 4 (G)^3) + F)^(1/3)) + (A - 2 B + C)/(H) and H!=0
+
+Solution # 3
+
+T = -((1 + i sqrt(3)) (sqrt((F)^2 + 4 (G)^3) + F)^(1/3))/(6 2^(1/3) (H)) + ((1 - i sqrt(3)) (G))/(3 2^(2/3) (H) (sqrt((F)^2 + 4 (G)^3) + F)^(1/3)) + (A - 2 B + C)/(H) and H!=0
+
+
+
+SIMPLIFICATION STEP 2
+//F = 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E
+
+F = 27 * ( A*D*(A+D) - E*(A*A+D*D) )
+    +  54 * ( A*D*E + B*B*B + C*C*C )
+    + 162 * ( A*(B*E+C*C) + D*(B*B + C*E) - A*C*E - B*D*E)
+    - 81*(A*(B*(C+D)+C*D)+B*C*(B+C+D))
+    - 243*E*(C-B)*(C-B);
+
+//G = 9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2
+//G = 9 (A C - A D - B^2 + B C + B D - C^2)
+G =  9 * ( A*(C-D) + B*(-B+C+D) - C*C );
+
+//H = A - 3 B + 3 C - D
+
+H = A - 3 * (B + C) - D;
+
+J = A - 2 B + C
+
+
+cbrtof2 = 2^1/3  1.25992104989
+twopowtwothirds = 2^2/3
+K = 1.58740105197 , 3*2^(2/3)
+complexplus = (1 ,  sqrt(3))  // 1.44224957031
+complexminus = (1 , -sqrt(3)) // -1.44224957031
+
+if H!=0
+
+Solution # 1
+
+T = (qbrt(sqrt(F*F + 4*G*G*G) + F))/(3*cbrtof2*H) - (cbrtof2 (G))/(3*H*(qbrt(sqrt(F*F + 4*G*G*G) + F))) + J/H
+
+Solution # 2
+
+T = -(complexminus*(qbrt(sqrt(F*F + 4*G*G*G) + F)))/(6*cbrtof2*H) + (complexplus)*G)/(K*H*(qbrt(sqrt(F*F + 4*G*G*G) + F))) + J/H
+
+Solution # 3
+
+T = -(complexplus*(qbrt(sqrt(F*F + 4*G*G*G) + F)))/(6*cbrtof2*H) + (complexminus)*G)/(K*H*(qbrt(sqrt(F*F + 4*G*G*G) + F))) + J/H
