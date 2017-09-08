@@ -6,7 +6,7 @@ Count how many times bezierPoint(x0,x1,x2,x3, solutions for T) < Point.x
 
 If that number is 0 or 2, the  point is on right side, else left
 
-A = y0, B = y1, C = y2, D = y3, yE = the Point.y  
+A = y0, B = y1, C = y2, D = y3, yE = the Point.y
 
 changing y to X should work the same
 
@@ -32,7 +32,7 @@ Solution # 3
 
 T = -((1 + i sqrt(3)) (sqrt((27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^2 + 4 (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2)^3) + 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^(1/3))/(6 2^(1/3) (A - 3 B + 3 C - D)) + ((1 - i sqrt(3)) (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2))/(3 2^(2/3) (A - 3 B + 3 C - D) (sqrt((27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^2 + 4 (9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2)^3) + 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E)^(1/3)) + (A - 2 B + C)/(A - 3 B + 3 C - D) and A - 3 B + 3 C - D!=0
 
-SIMPLIFICATION STEP 1
+SIMPLIFICATION
 
 F = 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E
 G = 9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2
@@ -50,27 +50,77 @@ Solution # 3
 
 T = -((1 + i sqrt(3)) (sqrt((F)^2 + 4 (G)^3) + F)^(1/3))/(6 2^(1/3) (H)) + ((1 - i sqrt(3)) (G))/(3 2^(2/3) (H) (sqrt((F)^2 + 4 (G)^3) + F)^(1/3)) + (A - 2 B + C)/(H) and H!=0
 
+Simplifying F
 
+F = 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E
 
-SIMPLIFICATION STEP 2
-//F = 27 A^2 D - 27 A^2 E - 81 A B C - 81 A B D + 162 A B E + 162 A C^2 - 81 A C D - 162 A C E + 27 A D^2 + 54 A D E + 54 B^3 - 81 B^2 C + 162 B^2 D - 243 B^2 E - 81 B C^2 - 81 B C D + 486 B C E - 162 B D E + 54 C^3 - 243 C^2 E + 162 C D E - 27 D^2 E
+Sorting the terms
 
-F = 27 * ( A*D*(A+D) - E*(A*A+D*D) )
+F =    27*A*A*D
+    +  27*A*D*D
+    +  54*A*D*E
+    +  54*B*B*B
+    +  54*C*C*C
+    + 162*A*B*E
+    + 162*A*C*C
+    + 162*B*B*D
+    + 162*C*D*E
+    + 486*B*C*E
+    - (
+       27*A*A*E
+    +  27*D*D*E
+    +  81*A*B*C
+    +  81*A*B*D
+    +  81*A*C*D
+    +  81*B*B*C
+    +  81*B*C*C
+    +  81*B*C*D
+    + 162*A*C*E
+    + 162*B*D*E
+    + 243*C*C*E
+    + 243*B*B*E
+    );
+
+Removing some multiplication by 27,54,81,162,243
+
+F  =   27 * ( A*A*D + A*D*D - ( A*A*E + D*D*E ) )
     +  54 * ( A*D*E + B*B*B + C*C*C )
-    + 162 * ( A*(B*E+C*C) + D*(B*B + C*E) - A*C*E - B*D*E)
-    - 81*(A*(B*(C+D)+C*D)+B*C*(B+C+D))
-    - 243*E*(C-B)*(C-B);
+    -  81 * ( A*B*C + A*B*D + A*C*D + B*B*C + B*C*C + B*C*D )
+    + 162 * ( A*B*E + A*C*C + B*B*D + C*D*E - ( A*C*E + B*D*E ) )
+    - 243 * ( C*C*E + B*B*E )
+    + 486 * ( B*C*E );
 
-//G = 9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2
-//G = 9 (A C - A D - B^2 + B C + B D - C^2)
+Removing some multiplications by variables
+
+F =    27 * ( A*(D*(A+D) - A*E) - D*D*E )
+    +  54 * ( A*D*E + B*B*B + C*C*C )
+    -  81 * ( A*(B*(C+D)+C*D) + B*C*(B+C+D) )
+    + 162 * ( A*( B*E + C*C ) + D*( B*B + C*E ) - E*(A*C+B*D) )
+    - 243 * E * ( B*B + C*C );
+    + 486 * B*C*E
+
+Simplifying G
+
+G = 9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2
+
+Removing multiplication by 9
+
+G = 9*(A*C - A*D - B*B + B*C + B*D - C*C)
+
+Removing some multiplication by A and B
+
 G =  9 * ( A*(C-D) + B*(-B+C+D) - C*C );
 
-//H = A - 3 B + 3 C - D
+Simplifying H
+
+H = A - 3 B + 3 C - D
+
+Not much to do at it's already quite simple
 
 H = A - 3 * (B + C) - D;
 
-J = A - 2 B + C
 
+J = A - 2*B + C
 
 cbrtof2 = 2^1/3  1.25992104989
 twopowtwothirds = 2^2/3
@@ -78,16 +128,33 @@ K = 1.58740105197 , 3*2^(2/3)
 complexplus = (1 ,  sqrt(3))  // 1.44224957031
 complexminus = (1 , -sqrt(3)) // -1.44224957031
 
+somecomplexnumber = (qbrt(sqrt(F*F + 4*G*G*G) + F))
+
 if H!=0
 
 Solution # 1
 
-T = (qbrt(sqrt(F*F + 4*G*G*G) + F))/(3*cbrtof2*H) - (cbrtof2 (G))/(3*H*(qbrt(sqrt(F*F + 4*G*G*G) + F))) + J/H
+T = somecomplexnumber /
+    ( 3 * cbrtof2 * H )
+-
+    ( cbrtof2 * G ) /
+    ( 3 * H * somecomplexnumber )
++ J/H
 
 Solution # 2
 
-T = -(complexminus*(qbrt(sqrt(F*F + 4*G*G*G) + F)))/(6*cbrtof2*H) + (complexplus)*G)/(K*H*(qbrt(sqrt(F*F + 4*G*G*G) + F))) + J/H
+T = - ( complexminus * somecomplexnumber ) /
+      ( 6 * cbrtof2 * H )
++
+      ( complexplus * G ) /
+      ( K * H * somecomplexnumber )
++ J/H
 
 Solution # 3
 
-T = -(complexplus*(qbrt(sqrt(F*F + 4*G*G*G) + F)))/(6*cbrtof2*H) + (complexminus)*G)/(K*H*(qbrt(sqrt(F*F + 4*G*G*G) + F))) + J/H
+T = - (  complexplus * somecomplexnumber ) /
+      ( 6 * cbrtof2 * H )
++
+     ( complexminus * G ) /
+     ( K * H * somecomplexnumber )
++ J/H
