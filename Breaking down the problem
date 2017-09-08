@@ -77,8 +77,12 @@ Turning some things into code, but not really familiar with how to deal with com
 qbrt(){return complex cuberoot;}
 
 double F,G,H;
-F = 27*(A*A*D + 6*A*C*C + A*D*D + 2*B*B*B + 6*B*B*D + 2*C*C*C) - 81*(A*(B*(C+D)+C*D)+B*C*(B+C+D));
-G = 9 (A*C - A*D - B*B + B*C + B*D - C*C);
+//F = 27*(A*A*D + 6*A*C*C + A*D*D + 2*B*B*B + 6*B*B*D + 2*C*C*C) - 81*(A*(B*(C+D)+C*D)+B*C*(B+C+D));
+//G = 9 (A*C - A*D - B*B + B*C + B*D - C*C);
+
+F = 27 * ( A * (A*D + D*D) + 2*(B*B*B + C*C*C) + 6*(A*C*C + B*B*D) ) - 81*(A*(B*(C+D)+C*D)+B*C*(B+C+D));
+G =  9 * ( A*(C-D) + B*(-B+C+D) - C*C );
+
 H = A - 3*B + 3*C - D;
 
 complex K = new complex(1 ,-sqrt(3) ); // signs are flipped in solution # 3
