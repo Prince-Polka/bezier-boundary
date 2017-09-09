@@ -1,24 +1,12 @@
-To find wheter Point is to the left or right of bezier(x0,y0,x1,y1,x2,y2,x3,y3)
+Find the upto 3 solutions for T where bezierPoint(x0,x1,x2,x3,T) == Point.x
 
-Find the (upto 3) solutions for T where bezierPoint(y0,y1,y2,y3,T) == Point.y
+A = x0, B = x1, C = x2, D = x3, E = the Point.x
 
-Count how many times bezierPoint(x0,x1,x2,x3, solutions for T) < Point.x
-
-If that number is 0 or 2, the  point is on right side, else left
-
-A = y0, B = y1, C = y2, D = y3, yE = the Point.y
-
-changing y to X should work the same
-
-Plaintext:
+INPUT:
 
 solve E = A (1 - T)^3 + 3 B (1 - T)^2 T + 3 C (1 - T) T^2 + D T^3 for T
 
-Input interpretation:
-
-solve E = A (1 - T)^3 + 3 B (1 - T)^2 T + 3 C (1 - T) T^2 + D T^3 for T
-
-Here are theunedited plaintext solutions
+PLAINTEXT SOLUTIONS:
 
 Solution # 1
 
@@ -117,10 +105,11 @@ J = (A - 2*B + C)/H
 
 L = 1.25992104989 2^(1/3)
 K = 1.58740105197 3*2^(2/3)
-complexplus  = ( 1 ,  sqrt(3) )  1,73205080756 i?
-complexminus = ( 1 , -sqrt(3) ) -1,73205080756 i?
 
-somecomplexnumber = cbrt( sqrt( F*F + 4*G*G*G ) + F )
+complexplus  = complex( 1 ,  sqrt(3) )  1,73205080756 i?
+complexminus = complex( 1 , -sqrt(3) ) -1,73205080756 i?
+
+somecomplexnumber = complex cbrt( sqrt( F*F + 4*G*G*G ) + F )
 
 if H!=0
 
