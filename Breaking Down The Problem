@@ -139,3 +139,70 @@ T = - (  complexplus * somecomplexnumber ) /
      ( complexminus * G ) /
      ( K * H * somecomplexnumber )
 + J
+
+
+CODE  
+
+class complex{
+  double r,i;
+  complex(){r=0; i=0;}
+  complex(double R){r=R; i=0;}
+  complex(double R,double I){r=R; i=I;}
+  
+  void set(double R,double I){r=R; i=I;}
+  
+  void mult(complex x){
+    if (i*x.i == 0) set(r*x.r,0); 
+    else set( r*x.r - i * x.i, r*x.i + i * x.r);
+  }
+  void div(complex x){
+    double e = x.r*x.r + x.i*x.i;
+    set( ( r*x.r + i*x.i ) / e, ( i*x.r - r*x.i ) / e );
+  }
+  
+  void sqrt(){}
+  void cbrt(){}
+  
+  
+}
+double sqrt(double N){return Math.signum(N)*Math.sqrt(Math.abs(N));}
+double cbrt(double N){return Math.signum(N)*Math.pow(Math.abs(N),1D/3D);}
+
+double[] bezierTime( double A, double B, double C, double D, double E ){
+  double[] T = new double[3];
+  double F,G,H,J,K,L;
+  
+  F = 27 * ( A*(A*D - A*E + D*D) - D*D*E )
+   +  54 * ( A*D*E + B*B*B + C*C*C )
+   -  81 * ( A*(B*C + B*D + C*D) + B*(B*C + C*C + C*D) )
+   + 162 * ( A*(B*E + C*C - C*E) + D*(B*B - B*E + C*E) )
+   - 243 * ( B*B*E + C*C*E)
+   + 486 * ( B*C*E );
+   
+   G =  9 * ( A*(C-D) + B*(-B+C+D) - C*C );
+   
+   H = A - 3 * (B + C) - D;
+   
+   J = (A - 2*B + C)/H;
+   
+   K = 1.58740105197; // 3 * pow(2,2/3)
+   
+   L = 1.25992104989; // cbrt(2)
+   
+   //M = cbrt( sqrt( F * F + 4*G*G*G) + F ) ;
+   
+   // 1 - i * sqrt(3)
+   // 1 + i * sqrt(3)
+
+   T[0] =   M / ( 3 * L * H )
+          - ( L * G ) / ( 3 * H * M )
+          + J;
+   T[1] = - ( minus * M ) / ( 6 * L * H )
+          + ( plus * G ) / ( K * H * M )
+          + J;
+   T[2] = - (  plus * M ) / ( 6 * L * H )
+          + ( minus * G ) / ( K * H * M )
+          + J;
+
+  return T;
+}
