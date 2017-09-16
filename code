@@ -1,0 +1,44 @@
+import org.apache.commons.math3.complex.*;
+
+double[] bezierTime( double A, double B, double C, double D, double E ){
+  double[] T = new double[3];
+  double F,G,H,J,K,L;
+  
+  F = 27 * ( A*(A*D - A*E + D*D) - D*D*E )
+   +  54 * ( A*D*E + B*B*B + C*C*C )
+   -  81 * ( A*(B*C + B*D + C*D) + B*(B*C + C*C + C*D) )
+   + 162 * ( A*(B*E + C*C - C*E) + D*(B*B - B*E + C*E) )
+   - 243 * ( B*B*E + C*C*E)
+   + 486 * ( B*C*E );
+   
+   G =  9 * ( A*(C-D) + B*(-B+C+D) - C*C );
+   
+   H = A - 3*B + 3*C - D;
+   
+   J = (A - 2*B + C)/H;
+   
+   K = 4.7622031559045984242551; // 3 * pow(2,2/3)
+   
+   L = 1.2599210498948731647672; // cbrt(2)
+
+   Complex M = new Complex(F * F + 4*G*G*G).sqrt();
+   M = M.add(F);
+   Complex[] roots = new Complex[3]; 
+   M.nthRoot(3).toArray(roots);
+   Complex root = roots[1];
+   
+   Complex  plus = new Complex(1, Math.sqrt(3)); // 1 + i * sqrt(3)
+   Complex minus = new Complex(1,-Math.sqrt(3)); // 1 - i * sqrt(3)
+
+   T[0] = + root.divide( 3 * L * H ).getReal()
+          - new Complex ( L * G ).divide(new Complex(3 * H).multiply(root) ).getReal()
+          + J;
+   T[1] = - (minus.multiply(root).divide(6 * L * H)).getReal()
+          + (plus.multiply(G).divide(new Complex(K * H).multiply(root) )).getReal()
+          + J;
+   T[2] = - (plus.multiply(root).divide(6 * L * H)).getReal()
+          + (minus.multiply(G).divide(new Complex(K * H).multiply(root) )).getReal()
+          + J;
+
+  return T;
+}
