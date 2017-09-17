@@ -15,15 +15,15 @@ double multr(Complex a, Complex b) {
 double divr(double a, Complex b) {
   return (a*b.r)/(b.r*b.r+b.i*b.i);
 }
-
+ 
 Complex add(Complex a, double b) {
   return new Complex(a.r+b, a.i);
 }
-
+ 
 Complex mult(double a, Complex b) {
   return new Complex( a*b.r, a*b.i);
 }
-
+ 
 Complex div(double a, Complex b) {
   double c=b.r*b.r+b.i*b.i;
   return new Complex(
@@ -34,69 +34,94 @@ Complex div(double a, Complex b) {
 double abs(Complex a) {
   return Math.sqrt(a.r*a.r+a.i*a.i);
 }
-
+ 
 Complex csqrt(Double a) {
   double t = Math.sqrt(Math.abs(a));
   if (a >= 0) return new Complex(t, 0);
   else return new Complex(0, t);
 }
-
+ 
 Complex cbrt(Complex a) {
   double  root = Math.cbrt(abs(a));
   double inner = (Math.atan2(a.i, a.r)+TAU) / 3;
   return new Complex(root*Math.cos(inner),root*Math.sin(inner));
 }
-
-
+ 
+ 
 double[] bezierTime( double A, double B, double C, double D, double E ) {
   double[] T = new double[3];
   double F, G, H, J, foo;
   final double K, cbrt2, sqrt3;
-
+ 
   F =  27 * ( A*(A*D - A*E + D*D) - D*D*E )
     +  54 * ( A*D*E + B*B*B + C*C*C )
     -  81 * ( A*(B*C + B*D + C*D) + B*(B*C + C*C + C*D) )
     + 162 * ( A*(B*E + C*C - C*E) + D*(B*B - B*E + C*E) )
     - 243 * ( B*B*E + C*C*E)
     + 486 * ( B*C*E );
-
+ 
   G =  9 * ( A*(C-D) + B*(-B+C+D) - C*C );
-
+ 
   H = A - 3*B + 3*C - D;
-
+ 
   J = (A - 2*B + C)/H;
-
+ 
   K = 4.7622031559045984242551169178169; // 3 * pow(2,2/3)
-
+ 
   cbrt2 = 1.2599210498948731647672106072782;
-
+ 
   sqrt3 = 1.7320508075688772935274463415059;
-
+ 
   Complex Root, RKH;
-
+ 
   final Complex plus, minus;
-
+ 
   plus = new Complex(1, sqrt3);
   minus = new Complex(1, -sqrt3);
-
+ 
   Root = csqrt(F*F+4*G*G*G);
   Root = add(Root, F);
   Root = cbrt(Root);
-
+ 
   RKH = div(G, mult(K*H, Root));
   H*=3;
   foo = divr(cbrt2*G, mult(H, Root));
   H*=cbrt2;
-
+ 
   double MR, PR, MG, PG; 
   MR = multr(minus, Root);
   PR = multr(plus, Root);
   MG = multr(minus, RKH);
   PG = multr(plus, RKH);
-
+ 
   T[0] = + Root.r/H - foo + J;
   T[1] = - MR/(H+H) + PG + J;
   T[2] = - PR/(H+H) + MG + J;
-
+ 
   return T;
+}
+ 
+double bezierPoint (double a, double b, double c, double d, double t) {
+  double t1 = t-1.0f;
+  return t * ( 3*t1*(b*t1-c*t) + d*t*t ) - a*t1*t1*t1;
+}
+ 
+double[] bezierPoints (double a, double b, double c, double d, double[] times ) {
+  double[] out = new double[times.length];
+  for(int i=0;i<times.length;i++){
+  double t = times[i];
+  double t1 = t-1.0D;
+  out[i] = t * ( 3*t1*(b*t1-c*t) + d*t*t ) - a*t1*t1*t1;
+  }
+  return out;
+}
+ 
+boolean bezierSide(double x0, double y0, double x1, double y1,
+                   double x2, double y2, double x3, double y3,
+                   double px,double py){
+ double [] points = bezierPoints(x0,x1,x2,x3,bezierTime(y0,y1,y2,y3,py));
+ int sum=0;
+ for(double p:points)if( px>p )sum++;
+ 
+ return (sum&1)==1; 
 }
