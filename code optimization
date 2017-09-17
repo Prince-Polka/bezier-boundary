@@ -1,0 +1,75 @@
+/*
+
+removed complex class using raw doubles instead, merged helper functions into the main function  
+probably more can be done
+
+*/
+
+double[] bezierTime( double A, double B, double C, double D, double E ) {
+  double[] T = new double[3];
+  double F, G, H, J;
+  final double K, cbrt2, sqrt3;
+ 
+  F =  27 * ( A*(A*D - A*E + D*D) - D*D*E )
+    +  54 * ( A*D*E + B*B*B + C*C*C )
+    -  81 * ( A*(B*C + B*D + C*D) + B*(B*C + C*C + C*D) )
+    + 162 * ( A*(B*E + C*C - C*E) + D*(B*B - B*E + C*E) )
+    - 243 * ( B*B*E + C*C*E)
+    + 486 * ( B*C*E );
+ 
+  G =  9 * ( A*(C-D) + B*(-B+C+D) - C*C );
+ 
+  H = A - 3*B + 3*C - D;
+ 
+  J = (A - 2*B + C)/H;
+ 
+  K = 4.7622031559045984242551169178169; // 3 * pow(2,2/3)
+ 
+  cbrt2 = 1.2599210498948731647672106072782;
+ 
+  sqrt3 = 1.7320508075688772935274463415059;
+ 
+  double FG, foo, Rootr=0,Rooti=0;
+ 
+  FG = F*F+4*G*G*G;
+ 
+  double s, rot, in;
+  s = Math.sqrt(Math.abs(FG));
+  if (FG >= 0) Rootr = s;
+  else Rooti = s;
+ 
+  Rootr+=F;
+ 
+  rot = Math.cbrt( Math.sqrt(Rootr*Rootr+Rooti*Rooti) );
+  in = ( Math.atan2(Rooti, Rootr)+TAU ) / 3;
+  Rootr = rot*Math.cos(in);
+  Rooti = rot*Math.sin(in);
+ 
+  double tr, ti, trti, zr, zi;
+  tr=K*H*Rootr;
+  ti=K*H*Rooti;
+  trti = tr*tr+ti*ti;
+  zr=( G*tr)/trti;
+  zi=(-G*ti)/trti*sqrt3;
+ 
+  H*=3;
+ 
+  tr=H*Rootr;
+  ti=H*Rooti;
+  trti = tr*tr+ti*ti;
+  foo = (cbrt2*G*tr)/trti;
+ 
+  H*=cbrt2;
+ 
+  double MR, PR, MG, PG; 
+  MR = Rootr+Rooti*sqrt3;
+  PR = Rootr-Rooti*sqrt3;
+  MG = zr+zi;
+  PG = zr-zi;
+ 
+  T[0] = + Rootr/H - foo + J;
+  T[1] = - MR/(H+H) + PG + J;
+  T[2] = - PR/(H+H) + MG + J;
+ 
+  return T;
+}
