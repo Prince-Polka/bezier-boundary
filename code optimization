@@ -28,6 +28,8 @@ double[] bezierTime( double A, double B, double C, double D, double E ) {
   cbrt2 = 1.2599210498948731647672106072782;
  
   sqrt3 = 1.7320508075688772935274463415059;
+  
+  // final double TAU = 6.283185307179586476925286766559; PI*2
  
   double FG, foo, Rootr=0,Rooti=0;
  
@@ -41,7 +43,7 @@ double[] bezierTime( double A, double B, double C, double D, double E ) {
   Rootr+=F;
  
   rot = Math.cbrt( Math.sqrt(Rootr*Rootr+Rooti*Rooti) );
-  in = ( Math.atan2(Rooti, Rootr)+TAU ) / 3;
+  in = ( Math.atan2(Rooti, Rootr)+TAU )
   Rootr = rot*Math.cos(in);
   Rooti = rot*Math.sin(in); // sincos possible ?
  
