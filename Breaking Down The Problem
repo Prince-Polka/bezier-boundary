@@ -87,21 +87,22 @@ F =    27 * ( A*(A*D - A*E + D*D) - D*D*E )
     - 243 * ( B*B*E + C*C*E)
     + 486 * ( B*C*E )
 
+Going back to this after trying to optimize the code,  
+
+Calculating H first gives this neat solution for F
+
+H =  3 * (C-B) + A-D
+
+F = 27*((B-C-C)*(B*(B+B+C)-C*(C+A*3))+D*(A*(A+D-3*(B+C))+B*(6*B-3*C))-(H*H*E))
+
+
 Simplifying G
 
 G = 9 A C - 9 A D - 9 B^2 + 9 B C + 9 B D - 9 C^2
 
-Removing multiplication by 9
+G =  9 * ( A*(C-D) + B*(C-B+D) - C*C )
 
-G = 9*(A*C - A*D - B*B + B*C + B*D - C*C)
-
-Removing some multiplication by A and B
-
-G =  9 * ( A*(C-D) + B*(-B+C+D) - C*C )
-
-H = A - 3 * (B + C) - D
-
-J = (A - 2*B + C)/H
+J = (A + C - B - B)/H
 
 L = 1.25992104989 2^(1/3)
 K = 3 * 1.58740105197 3*2^(2/3)
