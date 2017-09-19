@@ -12,7 +12,7 @@ simplified calculation of solutions
 double[] bezierTime( double A, double B, double C, double D, double E ) {
   double[] T = new double[3];
   double F, G, H, J;
-  final double K, U, TAU, cbrt2, sqrt3;
+  final double K, U, TAU, HOUR;
  
   H =  3*(C-B) + A-D;
  
@@ -26,33 +26,27 @@ double[] bezierTime( double A, double B, double C, double D, double E ) {
  
   U = 1.5874010519681994747517056392723; //2^2/3
   
-  TAU = 6.28318530717958647692528676655;
- 
-  cbrt2 = 1.2599210498948731647672106072782;
- 
-  sqrt3 = 1.7320508075688772935274463415059;
+  TAU = 6.28318530717958647692528676655; // 2*PI
+  
+  HOUR = 0.5235987755982988730771072305465; // PI /6
  
   double FG = F*F+4*G*G*G;
  
   double s, r, n;
   s = Math.sqrt(Math.abs(FG));
- 
   if (FG>=0) {
-    r = Math.cbrt(Math.abs(F+s));
+    r =   Math.cbrt(Math.abs(F+s));
     n = ( Math.atan2(0, F+s)+TAU )/3;
   } else {
     r = Math.cbrt(Math.abs(F)+s);
     n = ( Math.atan2(s, F)+TAU )/3;
   }
  
-  double cosn, sinn, mult12;
- 
-  cosn = Math.cos(n);
-  T[0] =  cosn * (U*r*r - 2*cbrt2*G) / ( 6*H*r ) + J;
-  mult12 = (12*G - U*r*r*K)/(12*H*r*K);
-  sinn = Math.sin(n) * sqrt3;
-  T[1] = (sinn+cosn)*mult12 + J;
-  T[2] = (cosn-sinn)*mult12 + J;
- 
+  double mult12 = (12*G-U*r*r*K)/(6*H*r*K);
+
+  T[0] = Math.sin(-HALF_PI-n) * mult12 + J;
+  T[1] = Math.sin(n+HOUR)*mult12 + J;
+  T[2] = Math.sin(-n+HOUR)*mult12 + J;
+
   return T;
 }
