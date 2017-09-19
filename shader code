@@ -17,9 +17,8 @@ H = 3.*(C-B) + A-D,
 FAB = (B-C-C)*(B*(B+B+C)-C*(C+A*3.))+D*(A*(A+D-3.*(B+C))+B*(6.*B-3.*C)),
 G =  9. * ( A*(C-D) + B*(C-B+D) - C*C ),
 J = ( A + C - B - B )/H,
-K = 4.7622031559045984242551169178169,
 U = 1.5874010519681994747517056392723,
-TAU = 6.283185307179586476925286766559;
+TWO_PI = 6.283185307179586476925286766559;
 const vec3 rots = vec3(
     -1.5707963267948966192313216916397,
     0.5235987755982988730771072305465,
@@ -34,9 +33,9 @@ vec3 bezierTime(float E) {
     float isneg = float(FG<0.)*s;
     r = abs(F+ispos)+isneg;
     r = sign(r)*pow(abs(r),1./3.);
-    n = (atan(isneg,F+ispos)+TAU )/3.;
-    float  mult12 = (12.*G-U*r*r*K)/(6.*H*r*K);
-    return sin( rots+vec3(-n,n,-n)) * mult12 + J;
+    n = (atan(isneg,F+ispos)+TWO_PI )/3.;
+    float  multr = (4.*G - r*r *U*U)/(6.*H*r*U);
+    return sin( rots+vec3(-n,n,-n)) * multr + J;
 }
 void main() {
     gl_FragColor = vec4(bezierTime(gl_FragCoord.x),1.0);
