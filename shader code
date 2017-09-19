@@ -1,7 +1,3 @@
-float cbrt(float x){
-    return sign(x)*pow(abs(x),1./3.);
-}
-
 const float A = 300.,B=-50.,C=550.,D=100.;
 const float
 H = 3.*(C-B) + A-D,
@@ -17,33 +13,28 @@ TAU = 6.283185307179586476925286766559;
 const vec3 rots = vec3(
     1.5707963267948966192313216916397,
     0.5235987755982988730771072305465,
-   -0.5235987755982988730771072305465
+    0.5235987755982988730771072305465
 );
 
 vec3 bezierTime(float E) {
-  float F = 27.*(FAB-(H*H*E));
-
-  float FG = F*F+4.*G*G*G;
-    
-  float X=0.,Y=0.;
- 
-  float s, r, n;
-  s = sqrt(abs(FG));
-    X=F+s*float(FG>0.0);
-    Y=  s*float(FG<0.0);
-
-  r = cbrt( sqrt(X*X+Y*Y) ); //r=cbrt(abs(F)+s);
-  n = ( atan(Y,X)+TAU )/3.;
-
-  float w = ( (G+G)/(H*K*r) - r/(3.*H*cbrt2) ); 
-  
-  return sin(n+rots)*vec3(( U*r*r - 2.*cbrt2*G ) / ( 6.*H*r ),w,-w)+J;
-    /*
-    line above should do fine but saving this incase
-    X = cos(n);
-    Y = sin(n)*sqrt3;
-    return vec3 (
-         X * ( U*r*r - 2.*cbrt2*G ) / ( 6.*H*r ),
-         0.5*(Y+X),
-        -0.5*(Y-X))*vec3(1,w,w)+J;*/
+    float F = 27.*(FAB-(H*H*E));
+    float FG = F*F+4.*G*G*G;
+    float s, r, n;
+    s = sqrt(abs(FG));
+ /*
+  if (FG>=0.) {
+    r = cbrt(abs(F+s));
+    n = (atan(0.,F+s)+TAU )/3.;
+  } else {
+    r = cbrt(abs(F)+s);
+    n = ( atan(s, F)+TAU )/3.;
+  }*/
+    float ispos = float(FG>=0.)*s;
+    float isneg = float(FG<0.)*s;
+    r = cbrt(abs(F+ispos)+isneg);
+    n = (atan(isneg,F+ispos)+TAU )/3.;
+    float  mult0, mult12;
+    mult0 = (   U*r*r - 2.*cbrt2*G ) / ( 6.*H*r    );
+    mult12 = ( - U*r*r * K  + 12.*G ) / ( 6.*H*r * K);
+    return sin( rots+vec3(n,n,-n))*vec3(mult0,mult12,mult12)+ J;
 }
