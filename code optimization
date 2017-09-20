@@ -11,18 +11,20 @@ simplified calculation of solutions
 
 double[] bezierTime( double A, double B, double C, double D, double E ) {
   double[] T = new double[3];
-  double F, G, H, J, FG, s, r, n, multr;
-  final double U, HALF_PI, TWO_PI, SIXTH_PI;
+  double FAB, G, H, J, FG,x, y, n, r, multr;
+  final double CBRT2, HALF_PI, TWO_PI, SIXTH_PI;
 
-  H =  3*(C-B) + A-D;
+  H =  3 * (C-B) + A-D;
 
-  F = 27*((B-C-C)*(B*(B+B+C)-C*(A*3+C))+D*(A*(A+D-3*(B+C))+B*(6*B-3*C))-(H*H*E));
+  FAB = (B-C-C) * ( B * (B+B+C) - C * (A*3+C) )
+    + D * ( A * ( A+D - 3*(B+C) ) + B * (6*B-3*C) );
+  x = 27*(FAB-H*H*E); // <- E isolated
 
   G =  9 * ( A*(C-D) + B*(D+C-B) - C*C );
 
-  J = ( A + C - B - B )/H;
+  J = ( A + C - B - B ) / H;
 
-  U = 1.5874010519681994747517056392723; //2^2/3
+  CBRT2 = 1.2599210498948731647672106072782;
 
   HALF_PI = 1.5707963267948966192313216916397;
 
@@ -30,22 +32,34 @@ double[] bezierTime( double A, double B, double C, double D, double E ) {
 
   SIXTH_PI = 0.5235987755982988730771072305465;
 
-  FG = F*F+4*G*G*G;
+  FG = x*x+4*G*G*G;
 
-  s = Math.sqrt(Math.abs(FG));
+  double aX = Math.abs(x);
+  y = Math.sqrt(Math.abs(FG));
   if (FG>=0) {
-    r =   Math.cbrt(Math.abs(F+s));
-    n = ( Math.atan2(0, F+s) + TWO_PI )/3;
+    n = Math.cbrt(Math.abs(x+y));
+    if (x+y>=0)r=TWO_PI/3;
+    else r = PI;
   } else {
-    r = Math.cbrt(Math.abs(F)+s);
-    n = ( Math.atan2(s, F) + TWO_PI )/3;
+    n = Math.cbrt(aX+y);
+    /* 
+    fast atan2() from njuffa @ https://math.stackexchange.com/a/1105038 
+    inlining it and not checking for sign of y since it's positive
+     */
+    double a, s;
+    a=Math.min(aX, y)/Math.max(aX, y); 
+    s = a*a;
+    r= ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
+    if (y>aX)r=HALF_PI-r;
+    if (x<0)r=PI-r;
+    r = (r+TWO_PI)/3;
   }
 
-  multr = (4*G - r*r *U*U)/(6*H*r*U);
+  multr = CBRT2*(G+G-CBRT2*n*n)/(6*H*n);
 
-  T[0] = Math.sin( -n - HALF_PI  ) * multr + J;
-  T[1] = Math.sin(  n + SIXTH_PI ) * multr + J;
-  T[2] = Math.sin( -n + SIXTH_PI ) * multr + J;
+  T[0] = Math.sin( -r - HALF_PI  ) * multr + J;
+  T[1] = Math.sin(  r + SIXTH_PI ) * multr + J;
+  T[2] = Math.sin( -r + SIXTH_PI ) * multr + J;
 
   return T;
 }
