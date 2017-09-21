@@ -31,7 +31,7 @@ final static double fastsin(double x) {
 
 double[] bezierTime( double A, double B, double C, double D, double E ) {
   double[] T = new double[3];
-  double FAB, G, H, J, FG,x, y, n, r, multr;
+  double FAB, G, H, J, FG, x, y, n, r, multn;
   final double CBRT2, HALF_PI, TWO_PI, SIXTH_PI;
 
   H =  3 * (C-B) + A-D;
@@ -39,11 +39,11 @@ double[] bezierTime( double A, double B, double C, double D, double E ) {
   FAB = (B-C-C) * ( B * (B+B+C) - C * (A*3+C) )
     + D * ( A * ( A+D - 3*(B+C) ) + B * (6*B-3*C) );
   x = 27*(FAB-H*H*E); /* <- E isolated
-  if the curve ABCD is static and you're testing several points E against it
-  then H, FAB, G, J are static and caching them may be faster?  
-  the x,n and r depends on the value of E though
-  be aware the name of the variables and the logic of the code may change
-  */
+   if the curve ABCD is static and you're testing several points E against it
+   then H, FAB, G, J are static and caching them may be faster?  
+   the x,n and r depends on the value of E though
+   be aware the name of the variables and the logic of the code may change
+   */
 
   G =  9 * ( A*(C-D) + B*(D+C-B) - C*C );
 
@@ -62,39 +62,41 @@ double[] bezierTime( double A, double B, double C, double D, double E ) {
   double aX = Math.abs(x);
   y = Math.sqrt(Math.abs(FG));
   if (FG>=0) {
+    /* this case does not need to calculate neither atan2 or sin */
     n = Math.cbrt(Math.abs(x+y));
-    if (x+y>=0)r=TWO_PI/3;
-    else r = PI;
-    /* 
-       if (x+y>=0)r=TWO_PI/3;
-       else r = PI;
-       is equivalent to;
-       r=(Math.atan2(0,y+x)+TWO_PI)/3; 
-       but should be faster
-    */
+    multn = CBRT2*(G+G-CBRT2*n*n)/(6*H*n);
+    if (x+y>=0) {
+      T[0] = 0.5*multn + J;
+      T[1] = T[0];
+      T[2] = -multn + J;
+    } else {
+      T[0] = multn + J;
+      T[1] = -0.5 * multn + J;
+      T[2] = T[1];
+    }
   } else {
+    /* for now I need atan2 and sin here but hope I can remove them */
     n = Math.cbrt(aX+y);
-    r = (Math.atan2(y,x)+TWO_PI)/3;
+    multn = CBRT2*(G+G-CBRT2*n*n)/(6*H*n);
+    r = (Math.atan2(y, x)+TWO_PI)/3;
     /* 
-    if Math.atan2 is slow try this code by
-    njuffa @ https://math.stackexchange.com/a/1105038 
-    double a, s;
-    a=Math.min(aX, y)/Math.max(aX, y); 
-    s = a*a;
-    r= ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
-    if (y>aX)r=HALF_PI-r;
-    if (x<0)r=PI-r;
-    r = (r+TWO_PI)/3;
-    */
-  }
-
-  multr = CBRT2*(G+G-CBRT2*n*n)/(6*H*n);
-  /*
+     if Math.atan2 is slow try this code by
+     njuffa @ https://math.stackexchange.com/a/1105038 
+     double a, s;
+     a=Math.min(aX, y)/Math.max(aX, y); 
+     s = a*a;
+     r= ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
+     if (y>aX)r=HALF_PI-r;
+     if (x<0)r=PI-r;
+     r = (r+TWO_PI)/3;
+     */
+    
+    /*
   if Math.sin is slow try fastsin()
-  */
-  T[0] = Math.sin( -r - HALF_PI  ) * multr + J;
-  T[1] = Math.sin(  r + SIXTH_PI ) * multr + J;
-  T[2] = Math.sin( -r + SIXTH_PI ) * multr + J;
-
+     */
+    T[0] = Math.sin( -r - HALF_PI  ) * multn + J;
+    T[1] = Math.sin(  r + SIXTH_PI ) * multn + J;
+    T[2] = Math.sin( -r + SIXTH_PI ) * multn + J;
+  }
   return T;
 }
