@@ -11,28 +11,77 @@ added alternatives for sine and atan2
 
 unclear how accurate they are and wheter they be faster or slower
 
+
+done some testing of sin, much faster than Math.sin for me
+it may be different on other systems and compilers
+
+modulo on double by the % operator, VERY!!! slow
+replacing it with a crude mod function made a huge impact
+
+division by factorial vs multiplying by the inverse,
+speed difference small, accuracy also small  
+
 */
 
+final static double fastmod(double a, double b){
+a/=b;
+a-=(int)a;
+a*=b;
+return a;
+}
+final static double 
+ invfact3 = - 1 / 6D, 
+ invfact5 =   1 / 120D,
+ invfact7 = - 1 / 5040D,
+ invfact9 =   1 / 362880D,
+invfact11 = - 1 / 39916800D,
+invfact13 =   1 / 6227020800D,
+invfact15 = - 1 / 1307674368000D,
+invfact17 =   1 / 355687428096000D,
+invfact19 = - 1 / 121645100408832000D,
+invfact21 =   1 / 51090942171709440000D,
+invfact23 = - 1 / 25852016738884976640000D,
+invfact25 =   1 / 15511210043330985984000000D,
+invfact27 = - 1 / 10888869450418352160768000000D,
+invfact29 =   1 / 8841761993739701954543616000000D,
+
+PI = Math.PI,
+TWO_PI = Math.PI*2,
+HALF_PI = Math.PI/2,
+SIXTH_PI = Math.PI/6,
+CBRT2 = 1.2599210498948731647672106072782;
+;
+
 final static double fastsin(double x) {
-  /*
-  will be way off for x not in range -Pi Pi
-  */
+  final double x0 = fastmod(x,TWO_PI); 
+                x = fastmod(x,PI); 
   final double x2=x*x;
-  return x 
-  - (x*=x2)/6 
-  + (x*=x2)/120 
-  - (x*=x2)/5040 
-  + (x*=x2)/362880 
-  - (x*=x2)/39916800 
-  + (x*=x2)/6227020800D
-  - (x*=x2)/1307674368000D
-  + (x*=x2)/355687428096000D;
+
+    x = x 
+    + (x*=x2) * invfact3
+    + (x*=x2) * invfact5
+    + (x*=x2) * invfact7
+    + (x*=x2) * invfact9
+    + (x*=x2) * invfact11
+    + (x*=x2) * invfact13
+    + (x*=x2) * invfact15
+    + (x*=x2) * invfact17
+    + (x*=x2) * invfact19
+    + (x*=x2) * invfact21
+    + (x*=x2) * invfact23
+    + (x*=x2) * invfact25
+    + (x*=x2) * invfact27
+    + (x*=x2) * invfact29
+    ;
+    
+    if(Math.abs(x0)>PI){ x=-x; }
+    
+    return x;
 }
 
 double[] bezierTime( double A, double B, double C, double D, double E ) {
   double[] T = new double[3];
   double FAB, G, H, J, FG, x, y, n, r, multn;
-  final double CBRT2, HALF_PI, TWO_PI, SIXTH_PI;
 
   H =  3 * (C-B) + A-D;
 
@@ -48,15 +97,7 @@ double[] bezierTime( double A, double B, double C, double D, double E ) {
   G =  9 * ( A*(C-D) + B*(D+C-B) - C*C );
 
   J = ( A + C - B - B ) / H;
-
-  CBRT2 = 1.2599210498948731647672106072782;
-
-  HALF_PI = 1.5707963267948966192313216916397;
-
-  TWO_PI = 6.28318530717958647692528676655;
-
-  SIXTH_PI = 0.5235987755982988730771072305465;
-
+  
   FG = x*x+4*G*G*G;
 
   double aX = Math.abs(x);
@@ -94,9 +135,9 @@ double[] bezierTime( double A, double B, double C, double D, double E ) {
     /*
   if Math.sin is slow try fastsin()
      */
-    T[0] = Math.sin( -r - HALF_PI  ) * multn + J;
-    T[1] = Math.sin(  r + SIXTH_PI ) * multn + J;
-    T[2] = Math.sin( -r + SIXTH_PI ) * multn + J;
+    T[0] = fastsin( -r - HALF_PI  ) * multn + J;
+    T[1] = fastsin(  r + SIXTH_PI ) * multn + J;
+    T[2] = fastsin( -r + SIXTH_PI ) * multn + J;
   }
   return T;
 }
