@@ -1,0 +1,122 @@
+/*
+Using float instead of double.
+Math functions replaced with approximations.
+*/
+/*
+ approximate cuberoot, 
+ ported from c code @
+ http://www.hackersdelight.org/hdcodetxt/acbrt.c.txt
+ */
+final static float acbrt(float x){
+  int xi = Float.floatToIntBits(x);
+    xi = (xi>>2)+(xi>>4);
+    xi += xi>>4;
+    xi += xi>>8;
+    xi += 709965728;
+    float xf = Float.intBitsToFloat(xi);
+    xf = 0.33333333f*(xf+xf+x/(xf*xf));  // Newton step.
+    return xf;
+  
+}
+/* 
+ approximate arctan , 
+ removed if (y < 0) as y is always positive
+ original code from njuffa @ https://math.stackexchange.com/a/1105038 
+*/
+final static float fastan2(float y, float x) {
+  float aX = Math.abs(x);
+  float a, s, r;
+  a=Math.min(aX, y)/Math.max(aX, y); 
+  s = a*a;
+  r = ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
+  if (y>aX)r=HALF_PI-r;
+  if (x<0)r=PI-r;
+  return r;
+}
+
+/*
+approximate modulo
+suprinsignly faster than the & operator for floating point types
+*/
+
+final static float fastmod(float a, float b) {
+  return a - b*(long)(a/b);
+}
+final static float 
+ invfact3 = - 1 / 6f, 
+ invfact5 =   1 / 120f,
+ invfact7 = - 1 / 5040f,
+ invfact9 =   1 / 362880f,
+invfact11 = - 1 / 39916800f,
+invfact13 =   1 / 6227020800f,
+invfact15 = - 1 / 1307674368000f,
+invfact17 =   1 / 355687428096000f,
+invfact19 = - 1 / 121645100408832000f,
+
+PI = (float)Math.PI,
+TWO_PI =(float)Math.PI*2,
+HALF_PI = (float)Math.PI/2,
+SIXTH_PI = (float)Math.PI/6,
+CBRT2 = 1.2599210498948731f;
+;
+
+final static float fastsin(float x) {
+  final float x0 = fastmod(x,TWO_PI); 
+                x = fastmod(x,PI); 
+  final float x2=x*x;
+    x = x 
+    + (x*=x2) * invfact3
+    + (x*=x2) * invfact5
+    + (x*=x2) * invfact7
+    + (x*=x2) * invfact9
+    + (x*=x2) * invfact11
+    + (x*=x2) * invfact13
+    + (x*=x2) * invfact15
+    + (x*=x2) * invfact17
+    + (x*=x2) * invfact19
+    ;
+    if(Math.abs(x0)>PI){ x=-x; }
+    
+    return x;
+}
+
+float[] bezierTime( float A, float B, float C, float D, float E ) {
+  float[] T = new float[3];
+  float FAB, G, H, J, FG, x, y, n, r, multn;
+  
+  H =  3 * (C-B) + A-D;
+
+  FAB = (B-C-C) * ( B * (B+B+C) - C * (A*3+C) )
+    + D * ( A * ( A+D - 3*(B+C) ) + B * (6*B-3*C) );
+  x = 27*(FAB-H*H*E);
+
+  G =  9 * ( A*(C-D) + B*(D+C-B) - C*C );
+
+  J = ( A + C - B - B ) / H;
+  
+  FG = x*x+4*G*G*G;
+
+  float aX = Math.abs(x);
+  y = (float)Math.sqrt(Math.abs(FG));
+  if (FG>=0) {
+    n = (float)acbrt(Math.abs(x+y));
+    multn = CBRT2*(G+G-CBRT2*n*n)/(6*H*n);
+    if (x+y>=0) {
+      T[0] = 0.5*multn + J;
+      T[1] = T[0];
+      T[2] = -multn + J;
+    } else {
+      T[0] = multn + J;
+      T[1] = -0.5 * multn + J;
+      T[2] = T[1];
+    }
+  } else {
+    n = acbrt(aX+y);
+    multn = CBRT2*(G+G-CBRT2*n*n)/(6*H*n);
+    r = (fastan2(y, x)+TWO_PI)/3;
+    T[0] = fastsin( -r - HALF_PI  ) * multn + J;
+    T[1] = fastsin(  r + SIXTH_PI ) * multn + J;
+    T[2] = fastsin( -r + SIXTH_PI ) * multn + J;
+  }
+  return T;
+}
