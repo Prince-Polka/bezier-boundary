@@ -1,5 +1,5 @@
 // Author: Prince Polka
-// Title: BezierTime save
+// Title: BezierTime revision
 
 #ifdef GL_ES
 precision highp float;
@@ -10,19 +10,6 @@ uniform vec2 u_mouse;
 uniform float u_time;
 
 const float
-
-A = 400.,
-B = -50.,
-C = 550.,
-D = 100.,
-
-/*
-A = 120.,
-B = 300.,
-C = 301.,
-D = 100.,
-*/
-
 U = 1.5874010519681994747517056392723,
 TWO_PI = 6.283185307179586476925286766559;
 const vec3 rots = vec3(
@@ -55,7 +42,7 @@ return vec4(
 );
 }
 
-vec3 bezierTime0(float E , vec4 bez) {
+vec3 bezierTime(float E , vec4 bez) {
     float F = 27.*(bez.y-(bez.x*bez.x*E));
     float FG = F*F+4.*bez.z*bez.z*bez.z;
     float s, r, n;
@@ -80,29 +67,16 @@ vec3 times2coords(vec3 t ,vec4 b){
     return (b.x*t1 + 3.*b.y*t)*t1*t1 + (3.*b.z*t1 + b.w*t)*t*t;
 }
 
-/*
-vec3 sort(vec3 times){
-    return vec3(
-        min(min(times.r,times.g),times.b),
-        min(max(times.r,min(times.g,times.b)),max(times.r,times.g)),
-        max(max(times.r,times.g),times.b)
-    );
-}
-*/
-
 void main() {
     vec2 st = gl_FragCoord.xy;
-    vec4 bezx = vec4(400.,-50.,550.,100.);
+    vec4 bezx =        vec4(400.,-50.,550.,100.);
     vec4 bezy = 500. - vec4(100.,200.,300.,400.);
-    
     vec4 bez = new_bezier(bezx);
     
-    vec3 times = bezierTime0(st.x,bez);
-    
+    vec3 times = bezierTime(st.x,bez);
     vec3 coords = times2coords(times,bezy);
 
     float ntimes = dot( step(st.y,coords) ,vec3(1));
-    
     vec3 color = vec3(mod(ntimes,2.0));
     
     gl_FragColor = vec4(color,1.0);
