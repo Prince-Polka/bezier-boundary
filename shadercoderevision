@@ -29,10 +29,7 @@ C = inp.z,
 D = inp.w;
 
 float
-H = 3.*(C-B) + A-D,
-FAB = (B-C-C)*(B*(B+B+C)-C*(C+A*3.))+D*(A*(A+D-3.*(B+C))+B*(6.*B-3.*C)),
-G =  9. * ( A*(C-D) + B*(C-B+D) - C*C ),
-J = ( A + C - B - B )/H;
+H = 3.*(C-B) + A-D;
     
 return vec4(
 3.*(C-B) + A-D,
@@ -72,19 +69,18 @@ vec3 times2coords(vec3 t ,vec4 b){
 
 void main() {
     vec2 st = gl_FragCoord.xy;
-    st.y = 500.- st.y;
+    vec2 res = u_resolution;
+    st.y = res.y- st.y;
     vec4 bezx =        vec4(100.,202.,301.,400.);
-    vec4 bezy = 500. - vec4(400.,-50.,550.,100.);
+    vec4 bezy = res.y - vec4(400.,-50.,550.,100.);
     
     vec4 bez = new_bezier(bezy);
-    
     vec3 times = bezierTime(st.y,bez);
-    //times = mod(clamp(times,0.0,1.0),1.0);
-    vec3 coords = times2coords(times,bezx);
-    
 
-    float ntimes = dot( step(500.-st.x,coords) ,vec3(1));
+    vec3 coords = times2coords(times,bezx);
+
+    float ntimes = dot( step(res.x-st.x,coords) ,vec3(1));
     vec3 color = vec3(mod(ntimes,2.0));
-    
+   
     gl_FragColor = vec4(color,1.0);
 }
