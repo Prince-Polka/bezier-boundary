@@ -56,27 +56,34 @@ vec3 bezierTime(float E , vec4 bez) {
     vec3 t,c;
     t = sin( rots+vec3(-n,n,-n)) * multr + bez.w;
     c = mod(clamp(t,0.0,1.0),1.0);
-    c.rg *= float( abs(t.r-t.g)>.001 );
-    c.rb *= float( abs(t.r-t.b)>.001 );
-    c.gb *= float( abs(t.g-t.b)>.001 );
+    // c.rg *= float( abs(t.r-t.g)>.001 );
+    // c.rb *= float( abs(t.r-t.b)>.001 );
+    // c.gb *= float( abs(t.g-t.b)>.001 );
     return c;
 }
 
 vec3 times2coords(vec3 t ,vec4 b){
     vec3 t1 = 1. - t;
-    return (b.x*t1 + 3.*b.y*t)*t1*t1 + (3.*b.z*t1 + b.w*t)*t*t;
+    vec3 ret = (b.x*t1 + 3.*b.y*t)*t1*t1 + (3.*b.z*t1 + b.w*t)*t*t;
+    ret *= step(.0001,t);
+    
+    return ret;
 }
 
 void main() {
     vec2 st = gl_FragCoord.xy;
-    vec4 bezx =        vec4(400.,-50.,550.,100.);
-    vec4 bezy = 500. - vec4(100.,200.,300.,400.);
-    vec4 bez = new_bezier(bezx);
+    st.y = 500.- st.y;
+    vec4 bezx =        vec4(100.,202.,301.,400.);
+    vec4 bezy = 500. - vec4(400.,-50.,550.,100.);
     
-    vec3 times = bezierTime(st.x,bez);
-    vec3 coords = times2coords(times,bezy);
+    vec4 bez = new_bezier(bezy);
+    
+    vec3 times = bezierTime(st.y,bez);
+    //times = mod(clamp(times,0.0,1.0),1.0);
+    vec3 coords = times2coords(times,bezx);
+    
 
-    float ntimes = dot( step(st.y,coords) ,vec3(1));
+    float ntimes = dot( step(500.-st.x,coords) ,vec3(1));
     vec3 color = vec3(mod(ntimes,2.0));
     
     gl_FragColor = vec4(color,1.0);
